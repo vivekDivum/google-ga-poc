@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
+import ReactGA from "react-ga4";
 
 function App() {
   const [showUsers, setShowUsers] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState({
+    name: "Vivek",
+    gaTrackingID: "G-JWV9CNW4WS",
+  });
   const userList = [
     {
       name: "Vivek",
-      gaTrackingID: "",
+      gaTrackingID: "G-JWV9CNW4WS",
     },
     {
       name: "Aayan",
-      gaTrackingID: "",
+      gaTrackingID: "G-H1L83KXDW9",
     },
   ];
 
@@ -18,29 +22,38 @@ function App() {
     {
       id: 1,
       name: "iPhone14",
-      price: "$500",
+      price: 500,
     },
     {
       id: 2,
       name: "MacBookAir M2",
-      price: "$800",
+      price: 800,
     },
     {
       id: 3,
       name: "iPad Air",
-      price: "$700",
+      price: 700,
     },
     {
       id: 4,
       name: "Macbook Pro",
-      price: "$2000",
+      price: 2000,
     },
   ];
 
   useEffect(() => {
     console.log("selectedUsers:", selectedUsers);
     console.log(userList[0]?.name);
+    ReactGA.initialize(selectedUsers?.gaTrackingID);
   }, [selectedUsers]);
+
+  useEffect(() => {
+    ReactGA.send({
+      hitType: "pageview",
+      page: window.location.pathname,
+      title: "Landed on site",
+    });
+  }, []);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -82,7 +95,7 @@ function App() {
                   onClick={() => setShowUsers(false)}
                 ></div>
                 {/* drop down */}
-                <div className="absolute z-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <div className="absolute z-10  bg-white divide-y divide-gray-100 rounded-lg shadow-2xl w-44 dark:bg-gray-700">
                   <ul
                     className="py-2 text-sm text-gray-700 dark:text-gray-200"
                     aria-labelledby="dropdownDefaultButton"
@@ -93,9 +106,8 @@ function App() {
                           key={data?.name}
                           className="block w-full text-left cursor-pointer"
                           onClick={() => {
-                            if (selectedUsers === data?.name) {
-                              setSelectedUsers(null);
-                            } else setSelectedUsers(data?.name);
+                            setSelectedUsers(data);
+                            setShowUsers(false);
                           }}
                         >
                           <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-lg">
@@ -109,11 +121,11 @@ function App() {
               </>
             )}
           </div>
-          <h2>
+          <h2 className="">
             <span className="text-gray-500 font-semibold">Selected User: </span>
             <span className="text-2xl ml-5">
               {" "}
-              {selectedUsers ? selectedUsers : "No user selected"}
+              {selectedUsers?.name ? selectedUsers?.name : "No user selected"}
             </span>
           </h2>
         </div>
@@ -130,10 +142,21 @@ function App() {
                   <h1 className="text-2xl"> {product?.name}</h1>
                   <h1 className="flex gap-2 text-lg my-3">
                     <span>Price:</span>
-                    <span className="font-semibold">{product?.price}</span>
+                    <span className="font-semibold">$ {product?.price}</span>
                   </h1>
 
-                  <button className="bg-blue-700 hover:bg-blue-800 transition-all text-white px-5 py-2 rounded-lg active:scale-95">
+                  <button
+                    onClick={() => {
+                      ReactGA.event({
+                        category: product?.name,
+                        action: "buy button cicked",
+                        label: "homepage product list",
+                        value: product?.price,
+                      }),
+                        console.log("product name:", product.name);
+                    }}
+                    className="bg-blue-700 hover:bg-blue-800 transition-all text-white px-5 py-2 rounded-lg active:scale-95"
+                  >
                     Buy now
                   </button>
                 </div>
