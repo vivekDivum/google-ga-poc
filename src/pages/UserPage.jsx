@@ -20,22 +20,20 @@ const UserPage = () => {
       page: window.location.pathname,
       title: "Landed on site",
     });
-  }, []);
+  }, [params?.user_id]);
   return (
-    <div className="mx-auto w-[60%]">
+    <div className="mx-auto w-[90%] md:w-[60%]">
       {/* username and google analytics ID */}
-      <div className="flex justify-center items-center gap-2  py-5">
-        <h1 className="flex-1 text-2xl font-medium text-right">
-          {selectedUsers?.name}
-        </h1>
+      <div className="flex justify-center items-center gap-2  py-5 ">
+        <h1 className="w-fit text-2xl font-medium ">{selectedUsers?.name}</h1>
         <h1 className="font-semibold text-2xl">:</h1>
-        <h1 className="flex-1 text-2xl font-medium">
+        <h1 className="w-fit text-2xl font-medium">
           {selectedUsers?.gaTrackingID}
         </h1>
       </div>
 
       {/* product list */}
-      <div className="mt-10 grid grid-cols-2 gap-5">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
         {productList?.map((product) => {
           return (
             <div
